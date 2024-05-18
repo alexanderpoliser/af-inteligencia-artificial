@@ -2,7 +2,7 @@ import subprocess
 import os
 from zipfile import ZipFile
 
-def downloadFiles(url, path):
+def download_files(url, path):
 
     cmd = ['wget', '-q', url, '-O', '%s' %(path)]
 
@@ -34,5 +34,7 @@ if not os.path.isdir(pathFiles):
 url = 'https://www.dropbox.com/scl/fo/2vh6qw9x2ae8zoma7md98/ALGVx_ju4WiPjneRZ68crs8?rlkey=s919cfytsov4bafkvnufmpgwg&e=1&st=qjynn11z&dl=0'
 datasetPath = pathFiles + 'arquivos_competicao.zip'
 
-downloadFiles(url, datasetPath)
-unzip(datasetPath, pathFiles)
+
+def load_dataset():
+    download_files(url, datasetPath)
+    unzip(datasetPath, pathFiles)
