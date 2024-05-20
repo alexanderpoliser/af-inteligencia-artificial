@@ -16,7 +16,7 @@ def term_frequency_train(df_train, ):
 
     return df_train_tf
 
-def term_frequency_train(df_test):
+def term_frequency_test(df_test):
      df_test_tf = df_test.copy()
 
      vectorizer = skl.feature_extraction.text.CountVectorizer(
