@@ -4,19 +4,29 @@ import numpy as np
 import gensim
 from gensim.models import Word2Vec
 
-def term_frequency(df_train, df_test):
+def term_frequency_train(df_train, ):
     df_train_tf = df_train.copy()
-    df_test_tf = df_test.copy()
-
+   
     vectorizer = skl.feature_extraction.text.CountVectorizer(
     analyzer = "word", tokenizer = None, preprocessor = None,
     stop_words = None, lowercase = True, binary=False,
     dtype=np.int32)
 
     vectorizer.fit_transform(df_train_tf)
-    vectorizer.transform(df_test_tf)
 
-    return df_train_tf, df_test_tf
+    return df_train_tf
+
+def term_frequency_train(df_test):
+     df_test_tf = df_test.copy()
+
+     vectorizer = skl.feature_extraction.text.CountVectorizer(
+     analyzer = "word", tokenizer = None, preprocessor = None,
+     stop_words = None, lowercase = True, binary=False,
+     dtype=np.int32)
+
+     vectorizer.transform(df_test_tf)
+
+     return df_test_tf
 
 def convert_to_binarie(df_train_tf, df_test_tf):
     df_train_bin = df_train_tf.copy()
@@ -71,7 +81,28 @@ def get_document_vector_by_mean(embedding_model, document):
 
     return vector_mean
 
-def dataset2featureMatrix(dataframe, embedding_model):
+def get_document_vector_with_zeros_vector(embedding_model, document, max_length):
+
+    first_word = embedding_model.wv.index_to_key[0]
+    dimEmbedding = embedding_model.wv[first_word].shape[0]
+
+    word_vectors = []
+
+    for i in range(max_length):
+
+      zeros_vector = np.zeros(dimEmbedding)
+      word_vectors.append(zeros_vector)
+
+      if i<len(document):
+          try:
+            word_vectors[i] = embedding_model.wv[document[i]]
+          except:
+            pass
+    word_vectors = np.array(word_vectors)
+
+    return word_vectors
+
+def dataframe_to_matrix_by_mean(dataframe, embedding_model):
     dataframe_embedding = []
     
     for document in dataframe:
@@ -81,4 +112,3 @@ def dataset2featureMatrix(dataframe, embedding_model):
     dataframe_embedding = np.array(dataframe_embedding)
 
     return dataframe_embedding
-
