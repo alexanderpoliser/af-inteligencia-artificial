@@ -4,7 +4,7 @@ import numpy as np
 import gensim
 from gensim.models import Word2Vec
 
-def term_frequency_train(df_train, ):
+def term_frequency_train(df_train):
     df_train_tf = df_train.copy()
    
     vectorizer = skl.feature_extraction.text.CountVectorizer(
