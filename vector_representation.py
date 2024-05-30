@@ -12,16 +12,16 @@ def term_frequency_train(df_train):
     stop_words = None, lowercase = True, binary=False,
     dtype=np.int32)
 
-    vectorizer.fit_transform(df_train_tf)
+    X_train_tf = vectorizer.fit_transform(df_train_tf)
 
-    return df_train_tf, vectorizer
+    return X_train_tf, vectorizer
 
 def term_frequency_test(df_test, vectorizer):
-     df_test_tf = df_test.copy()
+    df_test_tf = df_test.copy()
 
-     vectorizer.transform(df_test_tf)
+    X_test_tf = vectorizer.transform(df_test_tf)
 
-     return df_test_tf
+    return X_test_tf
 
 def convert_to_binarie(df_train_tf, df_test_tf):
     df_train_bin = df_train_tf.copy()
