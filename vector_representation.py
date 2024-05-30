@@ -23,12 +23,14 @@ def term_frequency_test(df_test, vectorizer):
 
     return X_test_tf
 
-def convert_to_binarie(df_train_tf, df_test_tf):
+def convert_to_binary(df_train_tf, df_test_tf):
     df_train_bin = df_train_tf.copy()
     df_test_bin = df_test_tf.copy()
 
     df_train_bin[df_train_bin>0] = 1
     df_test_bin[df_test_bin>0] = 1
+    df_train_bin[df_train_bin<0] = 0
+    df_test_bin[df_test_bin<0] = 0
 
     return df_train_bin, df_test_bin
 
