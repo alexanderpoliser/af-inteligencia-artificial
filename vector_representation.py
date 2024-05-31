@@ -78,6 +78,33 @@ def get_document_vector_by_mean(embedding_model, document):
 
     return vector_mean
 
+def get_document_vector_by_mean_pre_trained_model(embedding_model, document):
+
+    word_list = []
+    for word in document:
+        try:
+            vec = embedding_model[word]
+            word_list.append(vec)
+        except KeyError:
+            pass
+
+    if len(word_list) > 0:
+        vector_mean = np.mean(word_list, axis=0)
+    else:
+        vector_mean = np.zeros(embedding_model.vector_size)
+    return vector_mean
+
+def dataframe_to_matrix_by_mean_pre_trained_model(dataframe, embedding_model):
+    dataframe_embedding = []
+    
+    for document in dataframe:
+        vec = get_document_vector_by_mean_pre_trained_model(embedding_model, document)
+        dataframe_embedding.append(vec)
+
+    dataframe_embedding = np.array(dataframe_embedding)
+
+    return dataframe_embedding
+
 def get_document_vector_with_zeros_vector(embedding_model, document, max_length):
 
     first_word = embedding_model.wv.index_to_key[0]
