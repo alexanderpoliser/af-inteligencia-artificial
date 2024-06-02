@@ -122,15 +122,55 @@ def get_document_vector_with_zeros_vector(embedding_model, document, max_length)
             word_vectors[i] = embedding_model.wv[document[i]]
           except:
             pass
-    word_vectors = np.array(word_vectors)
 
     return word_vectors
+
+def get_document_vector_with_zeros_vector_pre_trained_model(embedding_model, document, max_length):
+    first_word = embedding_model.index_to_key[0]
+    dimEmbedding = len(embedding_model[first_word])
+
+    word_vectors = []
+
+    for i in range(max_length):
+
+      zeros_vector = np.zeros(dimEmbedding)
+      word_vectors.append(zeros_vector)
+
+      if i<len(document):
+          try:
+            word_vectors[i] = embedding_model[document[i]]
+          except:
+            pass
+
+    return word_vectors
+
+def dataframe_to_matrix_by_zeros_pre_trained_model(dataframe, embedding_model):
+    dataframe_embedding = []
+    
+    for document in dataframe:
+        vec = get_document_vector_with_zeros_vector_pre_trained_model(embedding_model, document)
+        dataframe_embedding.append(vec)
+
+    dataframe_embedding = np.array(dataframe_embedding)
+
+    return dataframe_embedding
 
 def dataframe_to_matrix_by_mean(dataframe, embedding_model):
     dataframe_embedding = []
     
     for document in dataframe:
         vec = get_document_vector_by_mean(embedding_model, document)
+        dataframe_embedding.append(vec)
+
+    dataframe_embedding = np.array(dataframe_embedding)
+
+    return dataframe_embedding
+
+def dataframe_to_matrix_by_zeros(dataframe, embedding_model):
+    dataframe_embedding = []
+    
+    for document in dataframe:
+        vec = get_document_vector_with_zeros_vector(embedding_model, document)
         dataframe_embedding.append(vec)
 
     dataframe_embedding = np.array(dataframe_embedding)
