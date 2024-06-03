@@ -1,48 +1,68 @@
+# Importa as bibliotecas
 import subprocess
 import os
 from zipfile import ZipFile
 
-def download_files(url, path):
+# Função para realizar o download de arquivos
+# É necessário indicar a URL e o diretório para o download
+def _download_files(url, path):
+    # Cria o comando CMD utilizando wget
+    command = ['wget', '-q', url, '-O', '%s' %(path)]
 
-    cmd = ['wget', '-q', url, '-O', '%s' %(path)]
+    # Cria um novo subprocesso indicando o comando a ser executado 
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+    # Aguarda o comando do subprocesso ser executado e recebe a saída do comando
     _, stderr = process.communicate()
 
+    # Verifica se o comando foi finalizado com sucesso e exibe uma mensagem de sucesso ou de erro
     if process.returncode == 0:
         print(f'Processo finalizado.')
     else:
         print(f'Houve um erro: {stderr.decode("utf-8")}')
 
-def unzip(path, pathFolder):
-
+# Função para descompactar um arquivo .zip em uma determinada pasta
+def _unzip(path, path_folder):
     try:
+        # Cria um objeto ZipFile com o arquivo especificado
         z = ZipFile(path, 'r')
-        z.extractall(pathFolder)
+
+        # Extrai todos os arquivos do zip para a pasta especificada
+        z.extractall(path_folder)
+
+        # "Fecha" o objeto ZipFile 
         z.close()
 
+        # Exibe a mensagem de sucesso
         print("Arquivo descompactado com sucesso!")
     except:
+        # Exibe a mensagem de erro
         print("Houve um erro ao tentar descompactar o arquivo")
 
-pathFiles1 = 'data/'
-pathFiles2 = 'pre-trained-models/'
-
-if not os.path.isdir(pathFiles1 and pathFiles2):
-    os.mkdir(pathFiles1)
-    os.mkdir(pathFiles2)
-
-url1 = 'https://www.dropbox.com/scl/fo/2vh6qw9x2ae8zoma7md98/ALGVx_ju4WiPjneRZ68crs8?rlkey=s919cfytsov4bafkvnufmpgwg&e=1&st=qjynn11z&dl=0'
-datasetPath1 = pathFiles1 + 'arquivos_competicao.zip'
-
-url2 = 'http://143.107.183.175:22980/download.php?file=embeddings/word2vec/skip_s50.zip'
-datasetPath2 = pathFiles2 + 'skip_s50.zip'
-
-
+# Função para realizar o download e descompactação dos arquivos do dataset da competição 
+# e também do modelo word2vec pré-treinado
 def load_dataset():
-    download_files(url1, datasetPath1)
-    unzip(datasetPath1, pathFiles1)
+    # Váriaveis armazenando o nome das pastas desejadas
+    dataset_folder = 'data/'
+    pre_trained_model_folder = 'pre-trained-models/'
 
-    download_files(url2, datasetPath2)
-    unzip(datasetPath2, pathFiles2)
+    # Váriaveis armazenando o caminho final dos arquivos zip
+    dataset_zip_file_path = dataset_folder + 'arquivos_competicao.zip'
+    pre_trained_model_zip_file_path = pre_trained_model_folder + 'skip_s50.zip'
+
+    # Váriaveis com as URLs de download do dataset da competição e do modelo pré-treinado
+    dataset_download_url = 'https://www.dropbox.com/scl/fo/2vh6qw9x2ae8zoma7md98/ALGVx_ju4WiPjneRZ68crs8?rlkey=s919cfytsov4bafkvnufmpgwg&e=1&st=qjynn11z&dl=0'
+    pre_trained_model_download_url = 'http://143.107.183.175:22980/download.php?file=embeddings/word2vec/skip_s50.zip'
+
+    # Cria as pastas caso ainda não existam
+    if not os.path.isdir(dataset_folder and pre_trained_model_folder):
+        os.mkdir(dataset_folder)
+        os.mkdir(pre_trained_model_folder)
+
+    # Realiza o download e descompactação do dataset da competição
+    _download_files(dataset_download_url, dataset_zip_file_path)
+    _unzip(dataset_zip_file_path, dataset_folder)
+
+    # Realiza o download e descompactação do modelo pré-treinado (word2vec)
+    _download_files(pre_trained_model_download_url, pre_trained_model_zip_file_path)
+    _unzip(pre_trained_model_zip_file_path, pre_trained_model_folder)
