@@ -64,5 +64,5 @@ def transform_xml_to_text(df_train, df_test):
     new_df_train.drop(columns=["ID"], inplace=True)
     new_df_test.drop(columns=["ID"], inplace=True)
 
-    # Retorna os dois dataframes"
+    # Retorna os dois dataframes
     return new_df_train, new_df_test
